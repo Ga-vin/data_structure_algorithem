@@ -56,3 +56,22 @@ binary_tree_t *find(element_type_t item, binary_tree_t *root)
 	return (root);
     }
 }
+
+/* ********************************************************************************
+ * @see    find_min
+ * @brief  Find minimal element value which the node has 
+ * @param  root -- root of binary tree
+ * @return the node which has minimal element value, or NULL
+ * *******************************************************************************/
+binary_tree_t *find_min(binary_tree_t *root)
+{
+    if ( !root) {
+	return (NULL);
+    }
+
+    if ( !root->left) {
+	return (root);
+    } else {
+	return find_min(root->left);
+    }
+}
