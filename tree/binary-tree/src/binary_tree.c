@@ -58,12 +58,12 @@ binary_tree_t *find(element_type_t item, binary_tree_t *root)
 }
 
 /* ********************************************************************************
- * @see    find_min
- * @brief  Find minimal element value which the node has 
+ * @see    find_min_recur
+ * @brief  Find minimal element value which the node has with recursion method
  * @param  root -- root of binary tree
  * @return the node which has minimal element value, or NULL
  * *******************************************************************************/
-binary_tree_t *find_min(binary_tree_t *root)
+binary_tree_t *find_min_recur(binary_tree_t *root)
 {
     if ( !root) {
 	return (NULL);
@@ -74,4 +74,88 @@ binary_tree_t *find_min(binary_tree_t *root)
     } else {
 	return find_min(root->left);
     }
+}
+
+/* ********************************************************************************
+ * @see    find_max_recur
+ * @brief  Find maxima element value which the node has with recursion method
+ * @param  root -- root of binary tree
+ * @return the node which has maxima element value, or NULL
+ * *******************************************************************************/
+binary_tree_t *find_max_recur(binary_tree_t *root)
+{
+    if ( !root) {
+	return (NULL);
+    }
+
+    if ( !root->right) {
+	return (root);
+    } else {
+	return find_max(root->right);
+    }
+}
+
+/* ********************************************************************************
+ * @see    find_min_iter
+ * @brief  Find minimal element value which the node has with iteration method
+ * @param  root -- root of binary tree
+ * @return the node which has minimal element value, or NULL
+ * *******************************************************************************/
+binary_tree_t *find_min_iter(binary_tree_t *root)
+{
+    if ( !root) {
+	while ( NULL != root->left) {
+	    root = root->left;
+	}
+    }
+
+    return (root);
+}
+
+/* ********************************************************************************
+ * @see    find_max_iter
+ * @brief  Find maxima element value which the node has with iteration method
+ * @param  root -- root of binary tree
+ * @return the node which has maxima element value, or NULL
+ * *******************************************************************************/
+binary_tree_t *find_max_iter(binary_tree_t *root)
+{
+    if ( !root) {
+	while ( NULL != root->right) {
+	    root = root->right;
+	}
+    }
+
+    return (root);
+}
+
+/* ********************************************************************************
+ * @see    insert
+ * @brief  Insert specific value into the binary tree in right node location
+ * @param  item -- item to be insert into the tree
+ * @param  root -- root of binary tree
+ * @return the node which has been inserted tree
+ * *******************************************************************************/
+binary_tree_t *insert(element_type_t item, binary_tree_t *root)
+{
+    if ( !root) {
+	/**
+	 * root of tree is NULL
+	 */
+	root = (binary_tree_t *)malloc(sizeof(binary_tree_t));
+	if ( !root) {
+	    fprintf(stderr, "[ERROR] malloc new node for the tree fail\n");
+	} else {
+	    root->item = item;
+	    root->left = root->right = NULL;
+	}
+    } else {
+	if ( item < root->item) {
+	    root->left = insert(item, root->left);
+	} else if ( item > root->item) {
+	    root->right = insert(item, root->right);
+	}
+    }
+
+    return (root);
 }

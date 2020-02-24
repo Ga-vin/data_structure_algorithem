@@ -3,8 +3,10 @@
 
 binary_tree_t *make_empty(binary_tree_t *root);
 binary_tree_t *find(element_type_t item, binary_tree_t *root);
-binary_tree_t *find_min(binary_tree_t *root);
-binary_tree_t *find_max(binary_tree_t *root);
+binary_tree_t *find_min_recur(binary_tree_t *root);
+binary_tree_t *find_max_recur(binary_tree_t *root);
+binary_tree_t *find_min_iter(binary_tree_t *root);
+binary_tree_t *find_max_iter(binary_tree_t *root);
 binary_tree_t *insert(element_type_t item, binary_tree_t *root);
 binary_tree_t *delete(element_type_t item, binary_tree_t *root);
 element_type_t retrieve(binary_tree_t *root);
