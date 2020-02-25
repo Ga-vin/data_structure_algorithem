@@ -132,7 +132,7 @@ binary_tree_t *find_max_iter(binary_tree_t *root)
 /* ********************************************************************************
  * @see    insert
  * @brief  Insert specific value into the binary tree in right node location
- * @param  item -- item to be insert into the tree
+ * @param  item -- item to be inserted into the tree
  * @param  root -- root of binary tree
  * @return the node which has been inserted tree
  * *******************************************************************************/
@@ -154,6 +154,44 @@ binary_tree_t *insert(element_type_t item, binary_tree_t *root)
 	    root->left = insert(item, root->left);
 	} else if ( item > root->item) {
 	    root->right = insert(item, root->right);
+	}
+    }
+
+    return (root);
+}
+
+/* ********************************************************************************
+ * @see    delete
+ * @brief  Delete specific value from the binary tree in right node location
+ * @param  item -- item to be deleted from the tree
+ * @param  root -- root of binary tree
+ * @return the node pointer which has been deleted tree
+ * *******************************************************************************/
+binary_tree_t *delete(element_type_t item, binary_tree_t *root)
+{
+    binary_tree_t *ttree = NULL;
+    
+    if ( !root) {
+	return (NULL);
+    } else {
+	if ( item > root->item) {
+	    root->right = delete(item, root->right);
+	} else if ( item < root->item) {
+	    root->left = delete(item, root->left);
+	} else {
+	    if ( root->left && root->right) {
+		ttree       = find_min_recur(root->right);
+		root->item  = ttree->item;
+		root->right = delete(root->item, root->right);
+	    } else {
+		ttree = root;
+		if ( !ttree->left) {
+		    root = root->right;
+		} else if ( !ttree->right) {
+		    root = root->left;
+		}
+		free(ttree);
+	    }
 	}
     }
 
