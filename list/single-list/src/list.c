@@ -1,43 +1,52 @@
+/** ********************************************************************************
+ **
+ ** @file    single-list.c
+ **
+ ** @author  Gavin.Bai
+ **
+ ** @date    2020.02.26
+ **
+ ** @brief   Implementation for single list which do all operations
+ ** *******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "list.h"
+#include "../include/list.h"
 
 /**
- *@fn list_init
- *@brief Initialize list
- *@param plist - list pointer
- *@param destroy - destructor
- *@ret   NONE
+ *@see    slist_init
+ *@brief  Initialize list
+ *@param  plist - list pointer
+ *@param  destroy - destructor
+ *@return NONE
  */
-void list_init(list_t *plist, void (*destroy)(void *data))
+void slist_init(list_t *plist, void (*destroy)(void *data))
 {
     if ( !plist) {
         return ;
     }
 
-    plist->size = 0;
-    plist->head = NULL;
-    plist->tail = NULL;
-
-    plist->destroy = ((NULL == destroy) ? NULL : destroy);
+    plist->size    = 0;
+    plist->head    = NULL;
+    plist->tail    = NULL;
+    plist->destroy = destroy;
 }
 
 /**
- *@fn list_destroy
- *@brief Destroy list structure all elements
- *@param plist - pointer to list head
- *@ret   None
+ *@see    slist_destroy
+ *@brief  Destroy list structure all elements
+ *@param  plist - pointer to list head
+ *@return None
  */
-void list_destroy(list_t *plist)
+void slist_destroy(list_t *plist)
 {
     void *data = NULL;
 
-    while ( LIST_SIZE(plist) > 0) {
-        if ( (0 == list_rem_next(plist, (void **)&data)) && (NULL != plist->destroy)) {
+    while ( slist_size(plist) > 0) {
+        if ( (0 == list_delete_next(plist, NULL, (void **)&data)) && (NULL != plist->destroy)) {
             plist->destroy(data);
         }
     }
