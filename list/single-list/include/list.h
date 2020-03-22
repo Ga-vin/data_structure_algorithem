@@ -7,8 +7,8 @@
  *@def List element
  */
 typedef struct list_element {
-    void   *data;
-    struct *list_element;
+    void                *data;
+    struct list_element *next;
 } list_element_t;
 
 /**

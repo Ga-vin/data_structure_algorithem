@@ -54,7 +54,15 @@ void slist_destroy(list_t *plist)
     memset(plist, 0, sizeof(list_t));
 }
 
-int32_t list_ins_next(list_t *plist, list_element_t *pelement, const void *data)
+/**
+ *@see    slist_insert_next
+ *@brief  Insert element at specific location
+ *@param  plist    - pointer to list head
+ *@param  pelement - specific location
+ *@param  data     - data to be inserted
+ *@return 0 will be returned when it is inserted success, or else -1
+ */
+int32_t list_insert_next(list_t *plist, list_element_t *pelement, const void *data)
 {
     list_element_t *new_element = NULL;
 
@@ -85,6 +93,55 @@ int32_t list_ins_next(list_t *plist, list_element_t *pelement, const void *data)
     }
 
     plist->size++;
+
+    return (0);
+}
+
+/**
+ *@see    slist_delete_next
+ *@brief  Delete element at specific location
+ *@param  plist    - pointer to list head
+ *@param  pelement - specific location
+ *@param  data     - data to be deleted
+ *@return 0 will be returned when it is deleted success, or else -1
+ */
+int32_t slist_delete_next(list_t *plist, list_element_t *element, void **data)
+{
+    list_element_t *odata;
+    
+    if ( !plist || !element || !data) {
+	return (-1);
+    }
+
+    if ( 0 == list_size(plist)) {
+	return (-1);
+    }
+
+    if ( NULL == element) {
+	*data 	    = plist->head->data;
+	odata 	    = plist->head;
+	plist->head = plist->head->next;
+
+	if ( 1 == list_size(plist)) {
+	    plist->tail = NULL;
+	}
+    } else {
+	if ( NULL == element->next) {
+	    return (-1);
+	}
+
+	*data 	      = element->next->data;
+	odata 	      = element->next;
+	element->next = element->next->next;
+
+	if ( NULL == element->next) {
+	    plist->tail = element;
+	}
+    }
+
+    free(odata);
+
+    plist->size--;
 
     return (0);
 }
