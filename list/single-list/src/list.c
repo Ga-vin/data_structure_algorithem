@@ -16,6 +16,14 @@
 
 #include "../include/list.h"
 
+int32_t compare(void *key1, void *key2)
+{
+    int8_t *pkey1 = (int8_t *)key1;
+    int8_t *pkey2 = (int8_t *)key2;
+
+    return ((*pkey1 == *pkey2) ? 0 : -1);
+}
+
 /**
  *@see    slist_init
  *@brief  Initialize list
@@ -244,4 +252,150 @@ list_element_t *slist_next(const list_element_t *nodp)
 int32_t slist_is_empty(list_t *plist)
 {
     return ((NULL == plist) ? (0) : ((0 == plist->size) ? (0) : (-1)));
+}
+
+/**
+ *@see    slist_insert_head
+ *@brief  Insert specific data into the list from header
+ *@param  plist - the specific list
+ *@param  data  - data to be inserted
+ *@return 0 will be returned when it is inserted success, or else -1
+ */
+int32_t slist_insert_head(list_t *plist, const void *data)
+{
+    list_element_t *nodp = NULL;
+
+    if ( (NULL == plist) || (NULL == data)) {
+	return (-1);
+    }
+
+    nodp = (list_element_t *)malloc(sizeof(list_element_t));
+    if ( NULL == nodp) {
+	return (-1);
+    }
+
+    nodp->data = (void *)data;
+    nodp->next = NULL;
+
+    if ( NULL == slist_head(plist)) {
+	plist->head = nodp;
+	plist->tail = nodp;
+    } else {
+	nodp->next        = plist->head->next;
+	plist->head->next = nodp;
+    }
+
+    plist->size++;
+
+    return (0);
+}
+
+/**
+ *@see    slist_delete_head
+ *@brief  Deleted specific data into the list from header
+ *@param  plist - the specific list
+ *@param  data  - data to be deleted
+ *@return 0 will be returned when it is deleted success, or else -1
+ */
+int32_t slist_delete_head(list_t *plist, void **data)
+{
+    list_element_t *nodp = NULL;
+    
+    if ( (NULL == plist) || (NULL == data)) {
+	return (-1);
+    }
+
+    if ( 0 == slist_is_empty(plist)) {
+	return (-1);
+    } else {
+	nodp        = plist->head;
+	*data       = (void *)plist->head->data;
+	plist->head = nodp->next;
+    }
+
+    free(nodp);
+    plist->size--;
+
+    return (0);
+}
+
+/**
+ *@see    slist_insert_tail
+ *@brief  Deleted specific data into the list from tail
+ *@param  plist - the specific list
+ *@param  data  - data to be inserted
+ *@return 0 will be returned when it is inserted success, or else -1
+ */
+int32_t slist_insert_tail(list_t *plist, const void *data)
+{
+    list_element_t *nodp = NULL;
+    
+    if ( (NULL == plist) || (NULL == data)) {
+	return (-1);
+    }
+
+    nodp = (list_element_t *)malloc(sizeof(list_element_t));
+    if ( NULL == nodp) {
+	return (-1);
+    }
+
+    nodp->data = (void *)data;
+    nodp->next = NULL;
+    
+    if ( NULL == slist_tail(plist)) {
+	plist->head = nodp;
+	plist->tail = nodp;
+    } else {
+	plist->tail->next = nodp;
+	plist->tail       = nodp;
+    }
+
+    plist->size++;
+
+    return (0);
+}
+
+/**
+ *@see    slist_delete_tail
+ *@brief  Deleted specific data into the list from tail
+ *@param  plist - the specific list
+ *@param  data  - data to be deleted
+ *@return 0 will be returned when it is deleted success, or else -1
+ */
+int32_t slist_delete_tail(list_t *plist, void **data)
+{
+    list_element_t *nodp  = NULL;
+    list_element_t *phead = NULL;
+    
+    if ( (NULL == plist) || (NULL == data)) {
+	return (-1);
+    }
+
+    if ( 0 == slist_is_empty(plist)) {
+	return (-1);
+    } else {
+	/**
+	 *@brief How to get the previous one of tail, and then point to new tail element node
+	 */
+	phead = slist_head(plist);
+	while ( phead->next) {
+	    if ( 0 == slist_is_tail(plist, phead->next, compare(slist_data(plist->tail), slist_data(phead->next)))) {
+		break;
+	    }
+
+	    phead = phead->next;
+	}
+
+	if ( NULL == phead->next) {
+	    return (-1);
+	} else {
+	    nodp        = plist->tail;
+	    *data       = (void *)plist->tail->data;
+	    phead->tail = phead;
+	}
+    }
+
+    plist->size--;
+
+    return (0);
 }
