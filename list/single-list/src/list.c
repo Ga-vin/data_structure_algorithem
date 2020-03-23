@@ -145,3 +145,103 @@ int32_t slist_delete_next(list_t *plist, list_element_t *element, void **data)
 
     return (0);
 }
+
+/**
+ *@see    slist_size
+ *@brief  Get size of single list
+ *@param  plist    - pointer to list head
+ *@return The length of list
+ */
+int32_t slist_size(list_t *plist)
+{
+    return ((NULL == plist) ? (-1) : ((int32_t)plist->size));
+}
+
+/**
+ *@see    slist_head
+ *@brief  Get head of single list
+ *@param  plist    - pointer to list head
+ *@return The header pointer of list
+ */
+list_element_t *slist_head(list_t *plist)
+{
+    return ((NULL == plist) ? (NULL) : (plist->head));    
+}
+
+/**
+ *@see    slist_tail
+ *@brief  Get tail of single list
+ *@param  plist    - pointer to list head
+ *@return The tail pointer of list
+ */
+list_element_t *slist_tail(list_t *plist)
+{
+    return ((NULL == plist) ? (NULL) : (plist->tail));
+}
+
+/**
+ *@see    slist_is_head
+ *@brief  Check whether the specific element which it is header of single list with match to compare
+ *@param  plist    - pointer to list head
+ *@param  elem     - specific element node
+ *@param  match    - specific compare method
+ *@return 0 will be returned when it is, or else -1
+ */
+int32_t slist_is_head(list_t *plist, list_element_t *elem, int32_t (*match)(void *key1, void *key2))
+{
+    if ( (NULL == plist) || (NULL == elem) || (NULL == match)) {
+	return (-1);
+    }
+
+    return ((0 == match((void *)plist->head->data, (void *)elem->data)) ? (0) : (-1));
+}
+
+/**
+ *@see    slist_is_tail
+ *@brief  Check whether the specific element which it is tail of single list with match to compare
+ *@param  plist    - pointer to list head
+ *@param  elem     - specific element node
+ *@param  match    - specific compare method
+ *@return 0 will be returned when it is, or else -1
+ */
+int32_t slist_is_tail(list_t *plist, list_element_t *elem, int32_t (*match)(void *key1, void *key2))
+{
+    if ( (NULL == plist) || (elem == NULL) || (NULL == match)) {
+	return (-1);
+    }
+
+    return ((0 == match((void *)plist->tail->data, (void *)elem->data)) ? (0) : (-1));
+}
+
+/**
+ *@see    slist_data
+ *@brief  Data area of the element node to be returned
+ *@param  elem     - specific element node
+ *@return Data of the element node will be returned
+ */
+void *slist_data(const list_element_t *nodp)
+{
+    return ((NULL == nodp) ? (NULL) : (nodp->data));
+}
+
+/**
+ *@see    slist_next
+ *@brief  Next area of the element node to be returned
+ *@param  elem     - specific element node
+ *@return Next of the element node will be returned
+ */
+list_element_t *slist_next(const list_element_t *nodp)
+{
+    return ((NULL == nodp) ? (NULL) : (nodp->next));
+}
+
+/**
+ *@see    slist_is_empty
+ *@brief  Check whether the single list which it is empty
+ *@param  plist - the specific list
+ *@return 0 will be returned when it empty, or else -1
+ */
+int32_t slist_is_empty(list_t *plist)
+{
+    return ((NULL == plist) ? (0) : ((0 == plist->size) ? (0) : (-1)));
+}
